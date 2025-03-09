@@ -47,7 +47,7 @@ void readSerial()
     // for recycle trash
     if (command == "S 1")
     {
-      moveServo(PWM_FREQ, 3); // 180°
+      moveServo(PWM_MAX, 3); // 180°
     }
     // for unrecycle trash
     else if (command == "S 0")
