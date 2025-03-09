@@ -34,6 +34,31 @@ void moveServo(int angle, int blinkTimes)
   myServo.write(SERVO_CENTER);
 }
 
+// Listen for serial command
+void readSerial()
+{
+  if (Serial.available() > 0)
+  {
+    String command = Serial.readStringUntil('\n');
+    command.trim();
+
+    // for recycle trash
+    if (command == "S 1")
+    {
+      moveServo(SERVO_RIGHT, 3);
+    }
+    // for unrecycle trash
+    else if (command == "S 0")
+    {
+      moveServo(SERVO_LEFT, 1);
+    }
+    else
+    {
+      Serial.println("Invalid command! Use 'S 1' for RIGHT, 'S 0' for LEFT.");
+    }
+  }
+}
+
 void setup()
 {
   Serial.begin(115200);
