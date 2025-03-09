@@ -12,6 +12,14 @@ constexpr int SERVO_RIGHT = 180;
 
 Servo myServo;
 
+// Set servo angle
+void moveServo(int angle) {
+    myServo.write(angle);
+    Serial.printf("Servo moved to %d°\n", angle);
+    delay(1500); // Wait for 1.5 seconds
+    myServo.write(SERVO_CENTER);
+}
+
 void setup()
 {
   Serial.begin(115200);
