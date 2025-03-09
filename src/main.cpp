@@ -1,18 +1,26 @@
 #include <Arduino.h>
+#include <Servo.h>
 
-// put function declarations here:
-int myFunction(int, int);
+// Constanta pin servo
+constexpr int SERVO_PIN = 18;
 
-void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+// Constanta degree servo
+constexpr int SERVO_LEFT = 0;
+constexpr int SERVO_CENTER = 90;
+constexpr int SERVO_RIGHT = 180;
+
+Servo myServo;
+
+void setup()
+{
+  Serial.begin(115200);
+  myServo.attach(SERVO_PIN);
+
+  myServo.write(SERVO_CENTER);
+  Serial.println("Servo Controller Initialized. Waiting for commands...");
 }
 
-void loop() {
+void loop()
+{
   // put your main code here, to run repeatedly:
-}
-
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
 }
