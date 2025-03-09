@@ -12,12 +12,26 @@ constexpr int SERVO_RIGHT = 180;
 
 Servo myServo;
 
+// Set LED blink
+void blinkLED(int times)
+{
+  for (int i = 0; i < times; i++)
+  {
+    digitalWrite(LED_PIN, HIGH);
+    delay(200);
+    digitalWrite(LED_PIN, LOW);
+    delay(200);
+  }
+}
+
 // Set servo angle
-void moveServo(int angle) {
-    myServo.write(angle);
-    Serial.printf("Servo moved to %d°\n", angle);
-    delay(1500); // Wait for 1.5 seconds
-    myServo.write(SERVO_CENTER);
+void moveServo(int angle, int blinkTimes)
+{
+  myServo.write(angle);
+  Serial.printf("Servo moved to %d°\n", angle);
+  blinkLED(blinkTimes);
+  delay(1500); // Wait for 1.5 seconds
+  myServo.write(SERVO_CENTER);
 }
 
 void setup()
