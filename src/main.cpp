@@ -1,4 +1,14 @@
 #include <Arduino.h>
+#include <WiFi.h>
+#include <ArduinoWebsockets.h>
+
+// Ganti SSID dan password sesuai jaringan WiFi Anda
+const char* ssid = "YOUR_SSID";
+const char* password = "YOUR_PASSWORD";
+
+// IP server Python dan port WebSocket (misalnya port 8765)
+const char* websocket_server_host = "192.168.1.100";
+const uint16_t websocket_server_port = 8765;
 
 // Constanta pin servo
 constexpr int SERVO_PIN = 18;
