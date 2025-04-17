@@ -2,13 +2,23 @@
 #include <WiFi.h>
 #include <ArduinoWebsockets.h>
 
+// Definisi pin untuk koneksi ke ESP32-CAM (UART2)
+#define CAM_RX 16 // Pin RX ESP32 untuk menerima data dari ESP32-CAM
+#define CAM_TX 17 // Pin TX jika diperlukan (biasanya tidak dipakai untuk hanya menerima)
+
 // Ganti SSID dan password sesuai jaringan WiFi Anda
-const char* ssid = "YOUR_SSID";
-const char* password = "YOUR_PASSWORD";
+const char *ssid = "YOUR_SSID";
+const char *password = "YOUR_PASSWORD";
 
 // IP server Python dan port WebSocket (misalnya port 8765)
-const char* websocket_server_host = "192.168.1.100";
+const char *websocket_server_host = "192.168.1.100";
 const uint16_t websocket_server_port = 8765;
+
+using namespace websockets;
+
+WebsocketsClient client;
+
+HardwareSerial camSerial(2); // Menggunakan UART2
 
 // Constanta pin servo
 constexpr int SERVO_PIN = 18;
