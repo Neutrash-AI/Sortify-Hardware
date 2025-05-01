@@ -81,33 +81,41 @@ void moveServo(int angle, int blinkTimes)
 }
 
 // Listen for serial command
-void readSerial()
-{
-  if (Serial.available() > 0)
-  {
-    String command = Serial.readStringUntil('\n');
-    command.trim();
+// void readSerial()
+// {
+//   if (Serial.available() > 0)
+//   {
+//     String command = Serial.readStringUntil('\n');
+//     command.trim();
 
-    // for recycle trash
-    if (command == "S 1")
-    {
-      moveServo(PWM_MAX, 3); // 180°
-    }
-    // for unrecycle trash
-    else if (command == "S 0")
-    {
-      moveServo(PWM_MIN, 1); // 0°
-    }
-    else
-    {
-      Serial.println("Invalid command! Use 'S 1' for RIGHT, 'S 0' for LEFT.");
-    }
-  }
-}
+//     // for recycle trash
+//     if (command == "S 1")
+//     {
+//       moveServo(PWM_MAX, 3); // 180°
+//     }
+//     // for unrecycle trash
+//     else if (command == "S 0")
+//     {
+//       moveServo(PWM_MIN, 1); // 0°
+//     }
+//     else
+//     {
+//       Serial.println("Invalid command! Use 'S 1' for RIGHT, 'S 0' for LEFT.");
+//     }
+//   }
+// }
 
 void setup()
 {
   Serial.begin(115200);
+  delay(1000);
+  connectToWiFi();
+  connectWebSocket();
+
+  // Inisialisasi serial untuk data dari ESP32-CAM
+  camSerial.begin(115200, SERIAL_8N1, CAM_RX, CAM_TX);
+  Serial.println("Inisialisasi koneksi ke ESP32-CAM selesai.");
+  
   // Setup PWM for servo
   ledcSetup(PWM_CHANNEL, PWM_FREQ, PWM_RESOLUTION);
   ledcAttachPin(SERVO_PIN, PWM_CHANNEL);
@@ -121,5 +129,5 @@ void setup()
 
 void loop()
 {
-  readSerial();
+  // readSerial();
 }
