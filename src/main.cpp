@@ -46,6 +46,18 @@ void connectToWiFi()
   Serial.println("\nWiFi terhubung. IP: " + WiFi.localIP().toString());
 }
 
+void connectWebSocket()
+{
+  // Membentuk URL misal "ws://192.168.1.100:8765/"
+  String url = "ws://";
+  url += websocket_server_host;
+  url += ":";
+  url += String(websocket_server_port);
+  url += "/";
+  client.connect(url);
+  Serial.println("Terhubung ke WebSocket server di " + url);
+}
+
 // Set LED blink
 void blinkLED(int times)
 {
