@@ -34,6 +34,18 @@ constexpr int PWM_MAX = 8192;    // 2500µs → 180°
 // Constanta pin LED
 constexpr int LED_PIN = 2;
 
+void connectToWiFi()
+{
+  Serial.print("Menghubungkan ke WiFi ");
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED)
+  {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("\nWiFi terhubung. IP: " + WiFi.localIP().toString());
+}
+
 // Set LED blink
 void blinkLED(int times)
 {
