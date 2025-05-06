@@ -68,29 +68,29 @@ void moveServo(int angle, int blinkTimes)
 }
 
 // Listen for serial command
-// void readSerial()
-// {
-//   if (Serial.available() > 0)
-//   {
-//     String command = Serial.readStringUntil('\n');
-//     command.trim();
+void readSerial()
+{
+  if (Serial.available() > 0)
+  {
+    String command = Serial.readStringUntil('\n');
+    command.trim();
 
-//     // for recycle trash
-//     if (command == "S 1")
-//     {
-//       moveServo(PWM_MAX, 3); // 180°
-//     }
-//     // for unrecycle trash
-//     else if (command == "S 0")
-//     {
-//       moveServo(PWM_MIN, 1); // 0°
-//     }
-//     else
-//     {
-//       Serial.println("Invalid command! Use 'S 1' for RIGHT, 'S 0' for LEFT.");
-//     }
-//   }
-// }
+    // for recycle trash
+    if (command == "S 1")
+    {
+      moveServo(PWM_MAX, 3); // 180°
+    }
+    // for unrecycle trash
+    else if (command == "S 0")
+    {
+      moveServo(PWM_MIN, 1); // 0°
+    }
+    else
+    {
+      Serial.println("Invalid command! Use 'S 1' for RIGHT, 'S 0' for LEFT.");
+    }
+  }
+}
 
 void setup()
 {
@@ -121,7 +121,7 @@ void setup()
 
 void loop()
 {
-  // readSerial();
+  readSerial();
 
   // Ambil satu frame dari kamera
   camera_fb_t *fb = esp_camera_fb_get();
