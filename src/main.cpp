@@ -1,18 +1,5 @@
 #include <Arduino.h>
-#include <WiFi.h>
-#include <ArduinoWebsockets.h>
 #include <esp_camera.h>
-
-// Ganti SSID dan password sesuai jaringan WiFi Anda
-const char *ssid = "YOUR_SSID";
-const char *password = "YOUR_PASSWORD";
-
-// IP server Python dan port WebSocket (misalnya port 8765)
-const char *websocket_server_host = "192.168.1.100";
-const uint16_t websocket_server_port = 8765;
-
-using namespace websockets;
-WebsocketsClient client;
 
 // Constanta pin servo
 constexpr int SERVO_PIN = 18;
@@ -57,30 +44,6 @@ static camera_config_t camera_config = {
     .frame_size = FRAMESIZE_VGA,
     .jpeg_quality = 12,
     .fb_count = 1};
-
-void connectToWiFi()
-{
-  Serial.print("Menghubungkan ke WiFi ");
-  WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED)
-  {
-    delay(500);
-    Serial.print(".");
-  }
-  Serial.println("\nWiFi terhubung. IP: " + WiFi.localIP().toString());
-}
-
-void connectWebSocket()
-{
-  // Membentuk URL misal "ws://192.168.1.100:8765/"
-  String url = "ws://";
-  url += websocket_server_host;
-  url += ":";
-  url += String(websocket_server_port);
-  url += "/";
-  client.connect(url);
-  Serial.println("Terhubung ke WebSocket server di " + url);
-}
 
 // Set LED blink
 void blinkLED(int times)
@@ -134,10 +97,6 @@ void setup()
   Serial.begin(115200);
   delay(1000);
 
-  // WiFi & WebSocket
-  connectToWiFi();
-  connectWebSocket();
-
   // Inisialisasi kamera
   if (esp_camera_init(&camera_config) != ESP_OK)
   {
@@ -163,21 +122,25 @@ void setup()
 void loop()
 {
   // readSerial();
-  // Pastikan koneksi WebSocket tetap aktif
-  client.poll();
 
   // Ambil satu frame dari kamera
   camera_fb_t *fb = esp_camera_fb_get();
   if (fb)
   {
-    // Kirim data frame sebagai binary lewat WebSocket
-    client.sendBinary((const char*)fb->buf, fb->len);
+    // Kirim panjang frame (4 byte little-endian)
+    uint32_t len = fb->len;
+    Serial.write(reinterpret_cast<uint8_t *>(&len), sizeof(len));
+    // Kirim data JPEG
+    Serial.write(fb->buf, fb->len);
+
     esp_camera_fb_return(fb);
-    Serial.println("Frame dikirim via WebSocket.");
+    // (Opsional) log debug
+    Serial.print("Sent frame, size=");
+    Serial.println(len);
   }
   else
   {
-    Serial.println("Gagal mengambil frame.");
+    Serial.println("Failed to get frame.");
   }
 
   // Delay antar frame (atur sesuai kebutuhan, misal 100 ms untuk ~10 fps)
